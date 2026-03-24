@@ -276,13 +276,16 @@ dadosPecas = {
 }
 
 
+#testes
 
 #verificarP(transformaCords("e4"), transformaCords("e2"), dadosPecas, pegarIdDoMoveAnterior(transformaCords("e2"), xadrez))
 
 #movimentoNaMatriz(transformaCords("c6"), transformaCords("b8"), xadrez, dadosPecas, pegarIdDoMoveAnterior(transformaCords("b8"),xadrez))
 #print_tabuleiro(xadrez, dadosPecas)
 
-#interface de usuario
+
+
+#interface de usuario, user interface
 
 jogo = True
 movimentoBranco = True
