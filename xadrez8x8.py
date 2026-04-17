@@ -48,7 +48,7 @@ def movimentoNaMatriz(coordenadasAtual, coordenadasAnterior, matriz,dados, id):
       matriz[coordenadasAnterior[0]][coordenadasAnterior[1]] = 0
 
     case "t" | "T":
-     if captura(coordenadasAtual,matriz) and  verificarT(coordenadasAtual, coordenadasAnterior):
+     if captura(coordenadasAtual,matriz) and  verificarT(coordenadasAtual, coordenadasAnterior, dados, id):
        matriz[coordenadasAtual[0]][coordenadasAtual[1]] = id
        matriz[coordenadasAnterior[0]][coordenadasAnterior[1]] = 0
      if veficarVazio(coordenadasAtual, matriz) and verificarT(coordenadasAtual, coordenadasAnterior) and verificarCaminho(coordenadasAtual, coordenadasAnterior, matriz):
@@ -190,7 +190,7 @@ def verificarC(coordenadasAtual, coordenadasAnterior):
     valido = False
   return valido
 
-def verificarT(coordenadasAtual, coordenadasAnterior):
+def verificarT(coordenadasAtual, coordenadasAnterior, dados, id):
   valido = True
   linhaA, colunaA = coordenadasAtual[0], coordenadasAtual[1]
   linhaB, colunaB = coordenadasAnterior[0], coordenadasAnterior[1]
@@ -199,6 +199,7 @@ def verificarT(coordenadasAtual, coordenadasAnterior):
   difColuna = abs(colunaA - colunaB)
 
   if difColuna == 0 or difLinha == 0:
+    dados[id]["primeiroMove"] = False
     valido = True
   else:
     print("movimento invalido")
@@ -317,9 +318,77 @@ def print_tabuleiro(matriz, dados):
       print(dados[casa]["tipo"], end=" ")
    print()
 
+def roque(matriz, dados, roque):
+ match roque:
+  case "curtoB":
+   cavalo = matriz[7][6]
+   bispo = matriz[7][5]
+   torre = matriz[7][7]
+  
+  
+   id = pegarIdDoMoveAnterior([7,7], matriz)
+   idR = pegarIdDoMoveAnterior([7,4], matriz)
+
+   if cavalo == 0 and bispo == 0 and torre != 0 and dados[id]["primeiroMove"] == True and dados[idR]["primeiroMove"] == True:
+     print("roque possivel")
+     return True
+   else:
+     print('roque não possivel')
+
+
+  case "curtoP":
+   cavalo = matriz[0][6]
+   bispo = matriz[0][5]
+   torre = matriz[0][7]
+  
+  
+   id = pegarIdDoMoveAnterior([0,7], matriz)
+   idR = pegarIdDoMoveAnterior([0,4], matriz)
+
+   if cavalo == 0 and bispo == 0 and torre != 0 and dados[id]["primeiroMove"] == True and dados[idR]["primeiroMove"] == True:
+     print("roque possivel")
+     return True
+   else:
+     print('roque não possivel')
+
+
+  case "grandeB":
+   cavalo = matriz[7][1]
+   bispo = matriz[7][2]
+   torre = matriz[7][0]
+   dama = matriz[7][3]
+  
+  
+   idT = pegarIdDoMoveAnterior([7,7], matriz)
+   idR = pegarIdDoMoveAnterior([7,4], matriz)
+
+   if cavalo == 0 and bispo == 0 and torre != 0 and dama == 0 and  dados[idT]["primeiroMove"] == True and dados[idR]["primeiroMove"] == True:
+     print("roque possivel")
+     return True
+   else:
+     print('roque não possivel')
+
+  case "grandeP":
+   cavalo = matriz[0][2]
+   bispo = matriz[0][1]
+   torre = matriz[0][0]
+   dama = matriz[0][3]
+  
+  
+   idT = pegarIdDoMoveAnterior([7,7], matriz)
+   idR = pegarIdDoMoveAnterior([7,4], matriz)
+
+   if cavalo == 0 and bispo == 0 and torre != 0 and dama == 0 and  dados[idT]["primeiroMove"] == True and dados[idR]["primeiroMove"] == True:
+     print("roque possivel")
+     return True
+   else:
+     print('roque não possivel')
+    
+
+     
  
 xadrez = [
-    [1, 2, 3, 4, 5, 6, 7, 8],
+    [1, 0, 0, 0, 5, 6, 7, 8],
     [16,15,14,13,12,11,10,9],
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -330,14 +399,14 @@ xadrez = [
 ]
 
 dadosPecas = {
-  1: {"tipo": "T", "cor": "preto"},
-  2: {"tipo": "C", "cor": "preto"},
-  3: {"tipo": "B", "cor": "preto"},
-  4: {"tipo": "Q", "cor": "preto"},
-  5: {"tipo": "R", "cor": "preto"},
+  1: {"tipo": "T", "cor": "preto","primeiroMove": True},
+  2: {"tipo": "C", "cor": "preto",},
+  3: {"tipo": "B", "cor": "preto", },
+  4: {"tipo": "Q", "cor": "preto",},
+  5: {"tipo": "R", "cor": "preto","primeiroMove": True},
   6: {"tipo": "B", "cor": "preto"},
   7: {"tipo": "C", "cor": "preto"},
-  8: {"tipo": "T", "cor": "preto"},
+  8: {"tipo": "T", "cor": "preto","primeiroMove": True},
   9: {"tipo": "P", "cor": "preto","primeiroMove": True},
   10: {"tipo": "P", "cor": "preto","primeiroMove": True},
   11: {"tipo": "P", "cor": "preto","primeiroMove": True},
@@ -354,26 +423,26 @@ dadosPecas = {
   22: {"tipo": "p", "cor": "branco","primeiroMove": True},
   23: {"tipo": "p", "cor": "branco","primeiroMove": True},
   24: {"tipo": "p", "cor": "branco","primeiroMove": True},
-  25: {"tipo": "t", "cor": "branco"},
+  25: {"tipo": "t", "cor": "branco","primeiroMove": True},
   26: {"tipo": "c", "cor": "branco"},
   27: {"tipo": "b", "cor": "branco"},
-  28: {"tipo": "r", "cor": "branco"},
+  28: {"tipo": "r", "cor": "branco","primeiroMove": True},
   29: {"tipo": "q", "cor": "branco"},
   30: {"tipo": "b", "cor": "branco"},
   31: {"tipo": "c", "cor": "branco"},
-  32: {"tipo": "t", "cor": "branco"},
+  32: {"tipo": "t", "cor": "branco","primeiroMove": True},
 }
 
 cor = "preto"
 
 
-
+roque(xadrez,dadosPecas, "grandeP")
 #print(verificarCaminho(transformaCords("c1"), transformaCords("b2"), xadrez))
 
 #movimentoNaMatriz(transformaCords("e5"), transformaCords("f3"), xadrez, dadosPecas, pegarIdDoMoveAnterior(transformaCords("f3"),xadrez))
 
 
-jogo = True
+jogo = False
 movimentoBranco = True
 movimentoPreto = True
 xequeBool = True
