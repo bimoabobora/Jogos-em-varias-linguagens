@@ -1,11 +1,17 @@
+'''
+melhorar a função de captura
 
-
+'''
 def transformaCords(cords):
  
   letras = ["a","b","c","d","e","f","g","h"]
   
   
-  coluna = letras.index(cords[0].lower())
+  try:
+    coluna = letras.index(cords[0].lower())
+  except ValueError:
+    print("Faça outro movimento")
+    return None
   linha =  8 - int(cords[1]) 
   listaDeCords = [linha, coluna]
 
@@ -22,28 +28,28 @@ def movimentoNaMatriz(coordenadasAtual, coordenadasAnterior, matriz,dados, id):
      if captura(coordenadasAtual,matriz) and not verificarP(coordenadasAtual, coordenadasAnterior, dados, id):
        matriz[coordenadasAtual[0]][coordenadasAtual[1]] = id
        matriz[coordenadasAnterior[0]][coordenadasAnterior[1]] = 0
-     elif veficarVazio(coordenadasAtual, matriz) and verificarP(coordenadasAtual, coordenadasAnterior, dados, id):
+     elif veficarVazio(coordenadasAtual, matriz) and verificarP(coordenadasAtual, coordenadasAnterior, dados, id) and verificarCaminho(coordenadasAtual, coordenadasAnterior, matriz):
       matriz[coordenadasAtual[0]][coordenadasAtual[1]] = id
       matriz[coordenadasAnterior[0]][coordenadasAnterior[1]] = 0
 
     case "t" | "T":
-     if captura(coordenadasAtual,matriz) and not verificarT(coordenadasAtual, coordenadasAnterior):
+     if captura(coordenadasAtual,matriz) and  verificarT(coordenadasAtual, coordenadasAnterior):
        matriz[coordenadasAtual[0]][coordenadasAtual[1]] = id
        matriz[coordenadasAnterior[0]][coordenadasAnterior[1]] = 0
-     if veficarVazio(coordenadasAtual, matriz) and verificarT(coordenadasAtual, coordenadasAnterior):
+     if veficarVazio(coordenadasAtual, matriz) and verificarT(coordenadasAtual, coordenadasAnterior) and verificarCaminho(coordenadasAtual, coordenadasAnterior, matriz):
       matriz[coordenadasAtual[0]][coordenadasAtual[1]] = id
       matriz[coordenadasAnterior[0]][coordenadasAnterior[1]] = 0
 
     case "b" | "B":
-     if captura(coordenadasAtual,matriz) and not verificarB(coordenadasAtual, coordenadasAnterior):
+     if captura(coordenadasAtual,matriz) and  verificarB(coordenadasAtual, coordenadasAnterior):
        matriz[coordenadasAtual[0]][coordenadasAtual[1]] = id
        matriz[coordenadasAnterior[0]][coordenadasAnterior[1]] = 0
-     if veficarVazio(coordenadasAtual, matriz) and verificarB(coordenadasAtual, coordenadasAnterior):
+     if veficarVazio(coordenadasAtual, matriz) and verificarB(coordenadasAtual, coordenadasAnterior) and verificarCaminho(coordenadasAtual, coordenadasAnterior, matriz):
       matriz[coordenadasAtual[0]][coordenadasAtual[1]] = id
       matriz[coordenadasAnterior[0]][coordenadasAnterior[1]] = 0
 
     case "c" | "C":
-     if captura(coordenadasAtual,matriz) and not verificarC(coordenadasAtual, coordenadasAnterior):
+     if captura(coordenadasAtual,matriz) and  verificarC(coordenadasAtual, coordenadasAnterior):
        matriz[coordenadasAtual[0]][coordenadasAtual[1]] = id
        matriz[coordenadasAnterior[0]][coordenadasAnterior[1]] = 0
      if veficarVazio(coordenadasAtual, matriz) and verificarC(coordenadasAtual, coordenadasAnterior):
@@ -51,20 +57,88 @@ def movimentoNaMatriz(coordenadasAtual, coordenadasAnterior, matriz,dados, id):
       matriz[coordenadasAnterior[0]][coordenadasAnterior[1]] = 0
 
     case "r" | "R":
-     if captura(coordenadasAtual,matriz) and not verificarR(coordenadasAtual, coordenadasAnterior):
+     if captura(coordenadasAtual,matriz) and  verificarR(coordenadasAtual, coordenadasAnterior):
        matriz[coordenadasAtual[0]][coordenadasAtual[1]] = id
        matriz[coordenadasAnterior[0]][coordenadasAnterior[1]] = 0
-     if veficarVazio(coordenadasAtual, matriz) and verificarR(coordenadasAtual, coordenadasAnterior):
+     if veficarVazio(coordenadasAtual, matriz) and verificarR(coordenadasAtual, coordenadasAnterior) and verificarCaminho(coordenadasAtual, coordenadasAnterior, matriz):
       matriz[coordenadasAtual[0]][coordenadasAtual[1]] = id
       matriz[coordenadasAnterior[0]][coordenadasAnterior[1]] = 0
 
     case "q" | "Q":
-     if captura(coordenadasAtual,matriz) and not verificarQ(coordenadasAtual, coordenadasAnterior):
+     if captura(coordenadasAtual,matriz) and  verificarQ(coordenadasAtual, coordenadasAnterior):
        matriz[coordenadasAtual[0]][coordenadasAtual[1]] = id
        matriz[coordenadasAnterior[0]][coordenadasAnterior[1]] = 0
-     if veficarVazio(coordenadasAtual, matriz) and verificarQ(coordenadasAtual, coordenadasAnterior):
+     if veficarVazio(coordenadasAtual, matriz) and verificarQ(coordenadasAtual, coordenadasAnterior) and verificarCaminho(coordenadasAtual, coordenadasAnterior, matriz):
       matriz[coordenadasAtual[0]][coordenadasAtual[1]] = id
       matriz[coordenadasAnterior[0]][coordenadasAnterior[1]] = 0
+
+def verificarCaminho(coordenadasAtual, coordenadasAnterior, matriz):
+  linhaA, colunaA = coordenadasAtual[0], coordenadasAtual[1] #4,2
+  linhaB, colunaB = coordenadasAnterior[0], coordenadasAnterior[1] #2,2
+  
+
+  difLinha = (linhaA - linhaB) #2
+  difColuna = (colunaA - colunaB) #0
+
+  linha_step = 0 if difLinha == 0 else (1 if difLinha > 0 else -1)
+  coluna_step = 0 if difColuna == 0 else (1 if difColuna > 0 else -1)
+
+  linha, coluna = linha_step + linhaB, coluna_step + colunaB 
+
+  while (linha,coluna) != (linhaA, colunaA):
+    if matriz[linha][coluna] != 0:
+      return False
+    linha += linha_step
+    coluna += coluna_step
+
+  return True
+
+def verificaAtaque(coordenadasAtual, coordenadasAnterior, matriz, dados, idPeca):
+  linhaA, colunaA = coordenadasAtual[0], coordenadasAtual[1]
+  linhaB, colunaB = coordenadasAnterior[0], coordenadasAnterior[1]
+
+  difLinha = abs(linhaA - linhaB)
+  difColuna = abs(colunaA - colunaB)
+
+  tipo = dados[idPeca]["tipo"]
+
+  if tipo.lower() == "c":
+    return (difColuna == 1 and difLinha == 2) or (difColuna == 2 and difLinha == 1) 
+  
+  if tipo.lower() == "b":
+    return (difLinha == difColuna) and verificarCaminho(coordenadasAtual, coordenadasAnterior, matriz)
+  
+  if tipo.lower() == "t":
+    return (difColuna == 0 or difLinha == 0) and verificarCaminho(coordenadasAtual, coordenadasAnterior, matriz)
+  
+  if tipo.lower() == "q":
+    return (difLinha == difColuna or linhaA == linhaB or colunaA == colunaB) and verificarCaminho(coordenadasAtual, coordenadasAnterior, matriz)
+  
+  if tipo.lower() == "r":
+    return (max(difLinha, difColuna) == 1) and verificarCaminho(coordenadasAtual, coordenadasAnterior, matriz)
+  
+  if tipo.lower() == "p":
+     direcao = - 1 if dados[idPeca]["cor"] == "branco" else 1
+     return (linhaA == linhaB + direcao) and difColuna == 1
+
+def acharRei(matriz, dados, cor):
+  for i in range(0,8):
+    for j in range(0,8):
+      idPeca = matriz[i][j]
+      if idPeca != 0:
+        if dados[idPeca]["tipo"].lower() == "r" and dados[idPeca]["cor"] == cor:
+         return i, j
+
+def xeque(matriz, dados, cor_rei):
+  posRei = acharRei(matriz, dados, cor_rei)
+  for i in range(0,8):
+    for j in range(0,8):
+      idPeca = matriz[i][j]
+  
+      if idPeca != 0 and dados[idPeca]["cor"] != cor_rei:
+        if verificaAtaque((i,j), posRei, matriz, dados, idPeca):
+          return True
+  return False
 
 def verificarP(coordenadasAtual, coordenadasAnterior, dados, id):
   valido = True
@@ -74,7 +148,7 @@ def verificarP(coordenadasAtual, coordenadasAnterior, dados, id):
   difLinha = abs(linhaA - linhaB)
   difColuna = abs(colunaA - colunaB)
 
-  if difColuna == 0 and difLinha == 1 or difLinha == 2 and dados[id]["primeiroMove"] == True:
+  if difLinha == 1 or difLinha == 2 and difColuna == 0 and dados[id]["primeiroMove"] == True:
     valido = True
     dados[id]["primeiroMove"] = False
     print("Duas casa")
@@ -123,24 +197,24 @@ def verificarB(coordenadaAtual, coordenadasAnterior):
   j = 0
   valido = True
   while True:
-   difLinha = abs(linhaA- linhaB) - i
-   difColuna = abs(colunaA - colunaB ) - j
+    difLinha = abs(linhaA- linhaB) - i
+    difColuna = abs(colunaA - colunaB ) - j
 
-   if difLinha != 0:
-    i += 1
-   else: i += 0
+    if difLinha != 0: 
+     i += 1
+    else: i += 0
+ 
+    if difColuna != 0:
+       j += 1
+    else: j += 0
 
-   if difColuna != 0:
-      j += 1
-   else: j += 0
-
-   if i != j:
-    valido = False
-    break
-   elif difColuna == 0 and difLinha == 0 and i == j:
-     valido = True
+    if i != j:
+     valido = False
      break
-  
+    elif difColuna == 0 and difLinha == 0 and i == j:
+      valido = True
+      break
+
   return valido
 
 def verificarR(coordenadasAtual, coordenadasAnterior):
@@ -275,47 +349,120 @@ dadosPecas = {
   32: {"tipo": "t", "cor": "branco"},
 }
 
-
-#testes
-
-#verificarP(transformaCords("e4"), transformaCords("e2"), dadosPecas, pegarIdDoMoveAnterior(transformaCords("e2"), xadrez))
-
-#movimentoNaMatriz(transformaCords("c6"), transformaCords("b8"), xadrez, dadosPecas, pegarIdDoMoveAnterior(transformaCords("b8"),xadrez))
-#print_tabuleiro(xadrez, dadosPecas)
+cor = "preto"
 
 
 
-#interface de usuario, user interface
+#print(verificarCaminho(transformaCords("c1"), transformaCords("b2"), xadrez))
+
+#movimentoNaMatriz(transformaCords("e5"), transformaCords("f3"), xadrez, dadosPecas, pegarIdDoMoveAnterior(transformaCords("f3"),xadrez))
+
 
 jogo = True
 movimentoBranco = True
 movimentoPreto = True
+xequeBool = True
 
 
 while jogo:
   print_tabuleiro(xadrez, dadosPecas)
-  while movimentoBranco:
-    movimentoAnterior = input("Digite a coordenada da peça que quer mover: ").lower()
-    movimentoAtual = input("Digite a coordenada que a peça iria ficar: ").lower()
+  match xeque(xadrez, dadosPecas, "branco"):
+    case True:
+       while True:
+        print("Seu rei está atacado, faça um movimento que saia do xeque.")
+       
 
-    if verificarVazioAnterior(transformaCords(movimentoAnterior), xadrez) == False:
-      print("Faça outro movimento")
-    else:
-     movimentoNaMatriz(transformaCords(movimentoAtual), transformaCords(movimentoAnterior), xadrez, dadosPecas, pegarIdDoMoveAnterior(transformaCords(movimentoAnterior),xadrez))
-     print_tabuleiro(xadrez, dadosPecas)
+        movimentoAnterior = input("Digite a coordenada da peça que quer mover: ").lower()
+    
 
-     movimentoBranco = False
-     movimentoPreto = True
+        idDaPeca = pegarIdDoMoveAnterior(transformaCords(movimentoAnterior), xadrez)
 
-  while movimentoPreto:
-    movimentoAnteriorP = input("Digite a coordenada da peça que quer mover: ").lower()
-    movimentoAtualP = input("Digite a coordenada que a peça iria ficar: ").lower()
+        print(f" peça escolhida {dadosPecas[idDaPeca]["tipo"]}")
+        movimentoAtual = input("Digite a coordenada que a peça iria ficar: ").lower()
 
-    if verificarVazioAnterior(transformaCords(movimentoAnteriorP), xadrez) == False:
-      print("Faça outro movimento")
-    else:
-     movimentoNaMatriz(transformaCords(movimentoAtualP), transformaCords(movimentoAnteriorP), xadrez, dadosPecas, pegarIdDoMoveAnterior(transformaCords(movimentoAnteriorP),xadrez))
-     print_tabuleiro(xadrez, dadosPecas)
+        if xeque(xadrez, dadosPecas, "branco"):
+          print("Rei ainda está em xeque, outro movimento")
+          xequeBool = True
+        else:
+          movimentoBranco = False
+          movimentoPreto = True
+          break
+  
+    case False:
+     while movimentoBranco:
+    
+       movimentoAnterior = input("Digite a coordenada da peça que quer mover: ").lower()
 
-     movimentoPreto = False
-     movimentoBranco = True
+       if pegarIdDoMoveAnterior(transformaCords(movimentoAnterior), xadrez) == 0:
+          print("Faça outro movimento.")
+          continue
+       if transformaCords(movimentoAnterior):
+         
+       
+       idDaPeca = pegarIdDoMoveAnterior(transformaCords(movimentoAnterior), xadrez)
+       print(f" peça escolhida {dadosPecas[idDaPeca]["tipo"]}")
+       movimentoAtual = input("Digite a coordenada que a peça iria ficar: ").lower()
+
+       if transformaCords(movimentoAnterior) == ValueError and transformaCords(movimentoAtual) == ValueError:
+         print("Faça outro movimento.")
+         continue
+         
+       if verificarVazioAnterior(transformaCords(movimentoAnterior), xadrez) == False:
+         print("Faça outro movimento")
+       else:
+        movimentoNaMatriz(transformaCords(movimentoAtual), transformaCords(movimentoAnterior), xadrez, dadosPecas, pegarIdDoMoveAnterior(transformaCords(movimentoAnterior),xadrez))
+        print_tabuleiro(xadrez, dadosPecas)
+
+        movimentoBranco = False
+        movimentoPreto = True
+        break
+       
+  match xeque(xadrez, dadosPecas, "preto"): 
+   case True:
+    while xequeBool:
+      print("seu rei está em xeque, mova ele para sair do xeque")
+
+      movimentoAnteriorP = input("Digite a coordenada da peça que quer mover: ").lower()
+      if pegarIdDoMoveAnterior(transformaCords(movimentoAnterior), xadrez) == 0:
+          print("Faça outro movimento.")
+          continue
+      
+      idDaPeca = pegarIdDoMoveAnterior(transformaCords(movimentoAnterior), xadrez)
+      print(f" peça escolhida {dadosPecas[idDaPeca]["tipo"]}")
+      movimentoAtualP = input("Digite a coordenada que a peça iria ficar: ").lower()
+
+      if xeque(xadrez, dadosPecas, "preto"):
+        print("Rei ainda está em xeque, faça outro movimento")
+      else:
+        movimentoNaMatriz(transformaCords(movimentoAtual), transformaCords(movimentoAnterior), xadrez, dadosPecas, pegarIdDoMoveAnterior(transformaCords(movimentoAnterior),xadrez))
+        print_tabuleiro(xadrez, dadosPecas)
+
+        movimentoBranco = False
+        movimentoPreto = True
+        break
+      
+
+
+   case False:
+    
+       while movimentoPreto:
+  
+        movimentoAnteriorP = input("Digite a coordenada da peça que quer mover: ").lower()
+
+        if pegarIdDoMoveAnterior(transformaCords(movimentoAnterior), xadrez) == 0:
+          print("Faça outro movimento.")
+          continue
+
+        idDaPeca = pegarIdDoMoveAnterior(transformaCords(movimentoAnteriorP), xadrez)
+        print(f" peça escolhida {dadosPecas[idDaPeca]["tipo"]}")
+        movimentoAtualP = input("Digite a coordenada que a peça iria ficar: ").lower()
+
+        if verificarVazioAnterior(transformaCords(movimentoAnteriorP), xadrez) == False:
+          print("Faça outro movimento")
+        else:
+         movimentoNaMatriz(transformaCords(movimentoAtualP), transformaCords(movimentoAnteriorP), xadrez, dadosPecas, pegarIdDoMoveAnterior(transformaCords(movimentoAnteriorP),xadrez))
+         print_tabuleiro(xadrez, dadosPecas)
+
+        movimentoPreto = False
+        movimentoBranco = True
+
