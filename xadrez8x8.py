@@ -3,16 +3,31 @@ melhorar a função de captura
 
 '''
 def transformaCords(cords):
- 
+  
+  if len(cords) != 2:
+   print("Use formato A1")
+   return None
+
+  elif not cords[1].isdigit():
+    print("Segundo caractere precisa ser número")
+    return None
+
+
   letras = ["a","b","c","d","e","f","g","h"]
   
+  cords = cords.strip()
   
   try:
     coluna = letras.index(cords[0].lower())
   except ValueError:
     print("Faça outro movimento")
     return None
-  linha =  8 - int(cords[1]) 
+  try:
+    linha =  8 - int(cords[1]) 
+  except ValueError:
+    return None
+  if linha > 8:
+    return None
   listaDeCords = [linha, coluna]
 
   return listaDeCords
@@ -373,17 +388,25 @@ while jogo:
        
 
         movimentoAnterior = input("Digite a coordenada da peça que quer mover: ").lower()
-    
+
+        if transformaCords(movimentoAnterior) == None:
+          continue
 
         idDaPeca = pegarIdDoMoveAnterior(transformaCords(movimentoAnterior), xadrez)
 
+
         print(f" peça escolhida {dadosPecas[idDaPeca]["tipo"]}")
         movimentoAtual = input("Digite a coordenada que a peça iria ficar: ").lower()
+
+        if transformaCords(movimentoAnterior) == None:
+         continue
 
         if xeque(xadrez, dadosPecas, "branco"):
           print("Rei ainda está em xeque, outro movimento")
           xequeBool = True
         else:
+          movimentoNaMatriz(transformaCords(movimentoAtual), transformaCords(movimentoAnterior), xadrez, dadosPecas, pegarIdDoMoveAnterior(transformaCords(movimentoAnterior),xadrez))
+          print_tabuleiro(xadrez, dadosPecas)
           movimentoBranco = False
           movimentoPreto = True
           break
@@ -392,19 +415,20 @@ while jogo:
      while movimentoBranco:
     
        movimentoAnterior = input("Digite a coordenada da peça que quer mover: ").lower()
-
+       
+       if transformaCords(movimentoAnterior) == None:
+         continue
+       
        if pegarIdDoMoveAnterior(transformaCords(movimentoAnterior), xadrez) == 0:
           print("Faça outro movimento.")
           continue
-       if transformaCords(movimentoAnterior):
-         
        
+         
        idDaPeca = pegarIdDoMoveAnterior(transformaCords(movimentoAnterior), xadrez)
        print(f" peça escolhida {dadosPecas[idDaPeca]["tipo"]}")
        movimentoAtual = input("Digite a coordenada que a peça iria ficar: ").lower()
 
-       if transformaCords(movimentoAnterior) == ValueError and transformaCords(movimentoAtual) == ValueError:
-         print("Faça outro movimento.")
+       if transformaCords(movimentoAtual) == None:
          continue
          
        if verificarVazioAnterior(transformaCords(movimentoAnterior), xadrez) == False:
@@ -423,6 +447,10 @@ while jogo:
       print("seu rei está em xeque, mova ele para sair do xeque")
 
       movimentoAnteriorP = input("Digite a coordenada da peça que quer mover: ").lower()
+
+      if transformaCords(movimentoAnterior) == None:
+         continue
+
       if pegarIdDoMoveAnterior(transformaCords(movimentoAnterior), xadrez) == 0:
           print("Faça outro movimento.")
           continue
@@ -430,6 +458,9 @@ while jogo:
       idDaPeca = pegarIdDoMoveAnterior(transformaCords(movimentoAnterior), xadrez)
       print(f" peça escolhida {dadosPecas[idDaPeca]["tipo"]}")
       movimentoAtualP = input("Digite a coordenada que a peça iria ficar: ").lower()
+
+      if transformaCords(movimentoAtualP) == None:
+         continue
 
       if xeque(xadrez, dadosPecas, "preto"):
         print("Rei ainda está em xeque, faça outro movimento")
@@ -449,13 +480,19 @@ while jogo:
   
         movimentoAnteriorP = input("Digite a coordenada da peça que quer mover: ").lower()
 
-        if pegarIdDoMoveAnterior(transformaCords(movimentoAnterior), xadrez) == 0:
+        if transformaCords(movimentoAnterior) == None:
+         continue
+
+        if pegarIdDoMoveAnterior(transformaCords(movimentoAnteriorP), xadrez) == 0:
           print("Faça outro movimento.")
           continue
 
         idDaPeca = pegarIdDoMoveAnterior(transformaCords(movimentoAnteriorP), xadrez)
         print(f" peça escolhida {dadosPecas[idDaPeca]["tipo"]}")
         movimentoAtualP = input("Digite a coordenada que a peça iria ficar: ").lower()
+
+        if transformaCords(movimentoAtualP) == None:
+         continue
 
         if verificarVazioAnterior(transformaCords(movimentoAnteriorP), xadrez) == False:
           print("Faça outro movimento")
